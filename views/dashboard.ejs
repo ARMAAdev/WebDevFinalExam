@@ -1,171 +1,171 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/styles/dashboard.css">
-</head>
-<body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/styles/dashboard.css">
+    </head>
+    <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="navbar-nav">
-        <a class="nav-item nav-link" href="/dashboard">Dashboard</a>
-        <a class="nav-item nav-link" href="/login-history">Login History</a>
-        <button id="Log-out" class="btn btn-danger ml-auto">Log Out</button>
-    </div>
-</nav>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/dashboard">Dashboard</a>
+            <a class="nav-item nav-link" href="/login-history">Login History</a>
+            <button id="Log-out" class="btn btn-danger ml-auto">Log Out</button>
+        </div>
+    </nav>
 
-<div class="container">
-    <h1 class="text-center text-orange">Dashboard</h1>
-    
-    <div class="image-container text-center">
-        <img src="/images/exam.png" alt="Dashboard Image" style="width: 300px;">
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <h3 class="text-left text-blue">Add Department</h3>
-            <form id="add-department-form" class="mb-4">
-                <input type="text" id="department-name" class="form-control mb-2" placeholder="Department Name" required>
-                <button type="submit" class="btn btn-primary">Add Department</button>
-            </form>
-            <table id="departments-table" class="table">
-                <thead>
-                    <tr>
-                        <th>Department ID</th>
-                        <th>Department Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Department rows will be added here -->
-                </tbody>
-            </table>
+    <div class="container">
+        <h1 class="text-center text-orange">Dashboard</h1>
+        
+        <div class="image-container text-center">
+            <img src="/images/exam.jpg" alt="Dashboard Image" style="width: 300px;">
         </div>
 
-        <div class="col-md-6">
-            <h3 class="text-left text-blue">Add User</h3>
-            <form id="add-user-form" class="mb-4">
-                <input type="text" id="username" class="form-control mb-2" placeholder="Username" required>
-                <input type="password" id="password" class="form-control mb-2" placeholder="Password" required>
-                <input type="text" id="department-id" class="form-control mb-2" placeholder="Department ID" required>
-                <button type="submit" class="btn btn-primary">Add User</button>
-            </form>
-            <table id="users-table" class="table">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Password</th>
-                        <th>Department</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- User rows with delete button will be added here -->
-                </tbody>
-            </table>
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="text-left text-blue">Add Department</h3>
+                <form id="add-department-form" class="mb-4">
+                    <input type="text" id="department-name" class="form-control mb-2" placeholder="Department Name" required>
+                    <button type="submit" class="btn btn-primary">Add Department</button>
+                </form>
+                <table id="departments-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>Department ID</th>
+                            <th>Department Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Department rows will be added here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                <h3 class="text-left text-blue">Add User</h3>
+                <form id="add-user-form" class="mb-4">
+                    <input type="text" id="username" class="form-control mb-2" placeholder="Username" required>
+                    <input type="password" id="password" class="form-control mb-2" placeholder="Password" required>
+                    <input type="text" id="department-id" class="form-control mb-2" placeholder="Department ID" required>
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </form>
+                <table id="users-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Department</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- User rows with delete button will be added here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        
     </div>
 
-    
-</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-
-$(document).ready(function() {
-    // AJAX for adding a department
-    $('#add-department-form').on('submit', function(e) {
-        e.preventDefault();
-        var departmentName = $('#department-name').val();
-        $.ajax({
-            url: '/api/add_department',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ name: departmentName }),
-            success: function(response) {
-                if (response) {
-                    // Update the departments table
-                    $('#departments-table').append('<tr><td>' + departmentName + '</td></tr>');
-                    $('#department-name').val(''); // Clear the input field
-                } else {
+    $(document).ready(function() {
+        // AJAX for adding a department
+        $('#add-department-form').on('submit', function(e) {
+            e.preventDefault();
+            var departmentName = $('#department-name').val();
+            $.ajax({
+                url: '/api/add_department',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ name: departmentName }),
+                success: function(response) {
+                    if (response) {
+                        // Update the departments table
+                        $('#departments-table').append('<tr><td>' + departmentName + '</td></tr>');
+                        $('#department-name').val(''); // Clear the input field
+                    } else {
+                        alert('Error happened. Please try again later');
+                    }
+                },
+                error: function() {
                     alert('Error happened. Please try again later');
                 }
-            },
-            error: function() {
-                alert('Error happened. Please try again later');
-            }
+            });
         });
-    });
 
-    // AJAX for adding a user
-    $('#add-user-form').on('submit', function(e) {
-        e.preventDefault();
-        var username = $('#username').val();
-        var password = $('#password').val();
-        var departmentId = $('#department-id').val();
-        $.ajax({
-            url: '/api/adduser',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ username: username, password: password, departmentId: departmentId }),
-            success: function(response) {
-                if (response) {
-                    // Update the users table
-                    $('#users-table').append('<tr><td>' + username + '</td><td>' + departmentId + '</td><td><button class="btn btn-danger delete-user-btn" data-username="' + username + '">Delete</button></td></tr>');
-                    $('#username, #password, #department-id').val(''); // Clear input fields
-                } else {
+        // AJAX for adding a user
+        $('#add-user-form').on('submit', function(e) {
+            e.preventDefault();
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var departmentId = $('#department-id').val();
+            $.ajax({
+                url: '/api/adduser',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ username: username, password: password, departmentId: departmentId }),
+                success: function(response) {
+                    if (response) {
+                        // Update the users table
+                        $('#users-table').append('<tr><td>' + username + '</td><td>' + departmentId + '</td><td><button class="btn btn-danger delete-user-btn" data-username="' + username + '">Delete</button></td></tr>');
+                        $('#username, #password, #department-id').val(''); // Clear input fields
+                    } else {
+                        alert('Error happened. Please try again later');
+                    }
+                },
+                error: function() {
                     alert('Error happened. Please try again later');
                 }
-            },
-            error: function() {
-                alert('Error happened. Please try again later');
-            }
+            });
         });
-    });
 
-    // AJAX for deleting a user
-    $('#users-table').on('click', '.delete-user-btn', function() {
-        var username = $(this).data('username');
-        $.ajax({
-            url: '/api/deleteuser',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ username: username }),
-            success: function(response) {
-                if (response) {
-                    $('button[data-username="' + username + '"]').closest('tr').remove();
-                } else {
+        // AJAX for deleting a user
+        $('#users-table').on('click', '.delete-user-btn', function() {
+            var username = $(this).data('username');
+            $.ajax({
+                url: '/api/deleteuser',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ username: username }),
+                success: function(response) {
+                    if (response) {
+                        $('button[data-username="' + username + '"]').closest('tr').remove();
+                    } else {
+                        alert('Error happened. Please try again later');
+                    }
+                },
+                error: function() {
                     alert('Error happened. Please try again later');
                 }
-            },
-            error: function() {
-                alert('Error happened. Please try again later');
-            }
+            });
         });
-    });
 
-    // AJAX for signing out
-    $('#sign-out').on('click', function() {
-        $.ajax({
-            url: '/api/logout',
-            type: 'POST',
-            success: function(response) {
-                if (response) {
-                    window.location.href = '/';
-                } else {
+        // AJAX for signing out
+        $('#sign-out').on('click', function() {
+            $.ajax({
+                url: '/api/logout',
+                type: 'POST',
+                success: function(response) {
+                    if (response) {
+                        window.location.href = '/';
+                    } else {
+                        alert('Logout error');
+                    }
+                },
+                error: function() {
                     alert('Logout error');
                 }
-            },
-            error: function() {
-                alert('Logout error');
-            }
+            });
         });
     });
-});
 
 
-</script>
-</body>
-</html>
+    </script>
+    </body>
+    </html>
