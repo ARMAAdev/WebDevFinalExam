@@ -63,112 +63,80 @@ app.post('/api/logout', (req, res) => {
     res.json({ success: true  });
     });
 
-app.post('/api/add_department', (req, res) => {
-    const { department_name } = req.body;
-  
-    connection.query(
-      'INSERT INTO departments (departments) VALUES (?)',
-      [department_name],
-      (err, result) => {
-        if (err) {
-          console.error('Error inserting data:', err);
-          res.status(500).json({ error: 'Error inserting data' });
-          return;
-        }
-  
-        if(result.affectedRows == 1)
-          res.status(200).json({ success: true, id: result.insertId, departmentName: department_name });
-      }
-    );
-  
-  });
 
-  app.get('/api/deleteuser', (req, res) => {
-    connection.query('DELETE FROM employees WHERE Id = ?', [req.params.EmployeeID], (err, results) => {
+
+    
+  app.post('/api/adduser', sessionChecker, (req, res) => {
+    const { username, password, departmentId } = req.body;
+    const query = 'INSERT INTO users (username, password, department_id) VALUES (?, ?, ?)';
+  
+    connection.query(query, [username, password, departmentId], (err, result) => {
       if (err) {
-        console.error('Error fetching users:', err);
-        res.status(500).json({ error: 'Error fetching users' });
-        return;
+        console.error('Error adding user:', err);
+        res.status(500).json({ success: false, message: 'Error adding user' });
+      } else {
+        res.json({ success: true, message: 'User added successfully', userId: result.insertId });
       }
-      res.redirect('/dashboard');
     });
   });
-
-  app.post('/api/adduser', (req, res) => {
-    const { department_name } = req.body;
   
-    connection.query(
-      'INSERT INTO employees (Username, Password, DepartmentID) VALUES (?, ?, ?)',
-      [Username, Password, DepartmentID],
-      (err, result) => {
-        if (err) {
-          console.error('Error inserting data:', err);
-          res.status(500).json({ error: 'Error inserting data' });
-          return;
-        }
+
+  app.post('/api/adddepartment', sessionChecker, (req, res) => {
+    const { departmentName } = req.body;
+    const query = 'INSERT INTO departments (Name) VALUES (?)';
   
-        if(result.affectedRows == 1)
-          res.status(200).json({ success: true, id: result.insertId, departmentName: department_name });
-      }
-    );
-  });
-
-
-
-app.post('/api/add_department', (req, res) => {
-    const { username, password } = req.body;
-
-    connection.query("SELECT * FROM Employees where Username = ? AND Password = ? ", [username, password], (err, results) => {
+    connection.query(query, [departmentName], (err, result) => {
       if (err) {
-        console.error('Error fetching users:', err);
-        res.status(500).json({ success: false, message: 'Error fetching users' });
-        return;
+        console.error('Error adding department:', err);
+        res.status(500).json({ success: false, message: 'Error adding department' });
+      } else {
+        res.json({ success: true, message: 'Department added successfully', departmentId: result.insertId });
       }
-      if (results.length > 0){
+    });
+  });
+  
+
+  app.post('/api/deleteuser', sessionChecker, (req, res) => {
+    const { userId } = req.body;
+    const query = 'DELETE FROM users WHERE id = ?';
+  
+    connection.query(query, [userId], (err, result) => {
+      if (err) {
+        console.error('Error deleting user:', err);
+        res.status(500).json({ success: false, message: 'Error deleting user' });
+      } else if (result.affectedRows > 0) {
+        res.json({ success: true, message: 'User deleted successfully' });
+      } else {
+        res.json({ success: false, message: 'User not found' });
+      }
+    });
+  });
+  
+
+  app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+  
+    connection.query("SELECT * FROM users WHERE username = ? AND password = ?", [username, password], (err, results) => {
+      if (err) {
+        res.status(500).json({ success: false, message: 'Error fetching users' });
+      } else if (results.length > 0) {
         req.session.loggedin = true;
         req.session.username = username;
-        res.redirect('/users'); 
-      } else {
-        res.status(500).json({ success: false, message: 'Authentication failed' });
-      }
-      
-    });
-});
-
-
   
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-
-    connection.query("SELECT * FROM Employees where Username = ? AND Password = ? ", [username, password], (err, results) => {
-      if (err) {
-        console.error('Error fetching users:', err);
-        res.status(500).json({ success: false, message: 'Error fetching users' });
-        return;
-      }
-      if (results.length > 0){
-        req.session.loggedin = true;
-        connection.query(
-            'INSERT INTO log ( Username, LoginDate) VALUES (?, NOW())',
-            [username],
-            (err, result) => {
-              if (err) {
-                console.error('Error inserting data:', err);
-                res.status(500).json({ error: 'Error inserting data' });
-                return;
-              }
+        connection.query('INSERT INTO log (Username, LoginDate) VALUES (?, NOW())', [username], (err, result) => {
+          if (err) {
+            console.error('Error inserting log:', err);
+            res.status(500).json({ success: false, message: 'Error logging login' });
+          } else {
+            res.json({ success: true, message: 'Login successful' });
+          }
         });
-        req.session.username = username;
       } else {
         res.status(500).json({ success: false, message: 'Authentication failed' });
       }
-      
     });
-});
-
-
-
-
+  });
+  
 
 const PORT = 3000;
 app.listen(PORT, () => {
