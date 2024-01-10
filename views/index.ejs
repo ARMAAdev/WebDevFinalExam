@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/dashboard">Dashboard</a>
+            <a class="nav-item nav-link" href="/login-history">Login History</a>
+            <button id="log-out" class="btn btn-danger ml-auto">Log Out</button>
+        </div>
+    </nav>
+    <div class="login-container">
+        <form id="login-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login Page </button>
+        </form>
+    </div>
+
+    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+
+
+        $('#login-form').on('submit', function(e) {
+        e.preventDefault();
+        var username = $('#username').val();
+        var password = $('#password').val();
+
+        $.ajax({
+            url: '/api/login',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ username: username, password: password }),
+            success: function(response) {
+                if (response === true) {
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Wrong Credentials');
+                }
+            },
+            error: function() {
+                alert('An error occurred. Please try again later.');
+            }
+        });
+    });
+
+
+    });
+  </script>
+
+</body>
+</html>

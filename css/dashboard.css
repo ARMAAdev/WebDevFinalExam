@@ -1,0 +1,17 @@
+.text-orange {
+    color: orange;
+}
+
+.text-blue {
+    color: blue;
+}
+
+.image-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.text-left {
+    text-align: left;
+}
+
